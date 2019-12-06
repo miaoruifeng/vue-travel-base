@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue中的列表渲染</title>
+	<script type="text/javascript" src="../vue.js"></script>
+</head>
+<body>
+	<div id="root">
+
+		<p :style="styleObj">
+			<span v-for="item of list" :key="item.id">
+				{{item.text}}
+			</span>
+		</p>
+
+		<!-- 模板占位符 -->
+		<template v-for="(item, index) of list">
+			<div>{{index}}</div>
+			<span>{{item.text}}</span>
+		</template>
+
+		<!-- 循环数组渲染 -->
+		<div v-for="(item, index) of list" :key="item.id">
+			{{item.text}}---{{index}}
+		</div>
+		<!-- 循环对象渲染 -->
+		<div v-for="(item, key, index) of userInfo">
+			{{item}}---{{key}}---{{index}}
+		</div>
+	</div>	
+
+	<script type="text/javascript">
+
+		/*
+			1. 循环数组渲染
+			当我们尝试修改数组的时候，不能直接通过下标修改，因为数据无法响应到页面。只能通过vue提供的几个变异方法操作数组，才能实现数据变化，页面也跟着变。
+			(1)--变异数组方法：
+			push()
+			pop()
+			shift()
+			unshift()
+			splice()
+			sort()
+			reverse()
+			eg: 修改数组第二项（下标为1的元素）
+				vw.list.splice(1, 1, {id: '123', text: 'Mike'})
+			(2)--利用数组的引用直接改变数组
+				即：用一个新数组替换原来的数组
+
+			2.循环对象渲染
+		*/
+
+		var vm = new Vue({
+			el: '#root',
+			data: {
+				styleObj: {
+					color: 'red',
+					fontSize: '16px',
+					fontWeight: 'bold'
+				},
+				list: [{
+					id: '001',
+					text: 'miao'
+				}, {
+					id: '002',
+					text: 'rui'
+				}, {
+					id: '003',
+					text: 'feng'
+				}],
+
+				userInfo: {
+					name: 'miao',
+					age: 26,
+					gender: 'male'
+				}
+			}
+		})
+		
+		// Vue.set(vm.userInfo, "address", "xi'an");
+		vm.$set(vm.userInfo, "address", "xi'an");
+		console.log(vm.userInfo);
+	</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>v-text & v-html</title>
+	<script type="text/javascript" src="./vue.js"></script>
+</head>
+<body>
+	<!-- v-text标签会转译  v-html标签不会转译 -->
+	<div id="root">
+		<div v-text="content1"></div>
+		<div v-html="content2"></div>
+	</div>
+
+	<script>
+		new Vue({
+			el: "#root",
+			data: {
+				content1: "<h1>hello world</h1>",
+				content2: "<h1>hello world</h1>"
+			}
+		})
+	</script>
+
+</body>
+</html>

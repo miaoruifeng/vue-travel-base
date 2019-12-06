@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>给组件绑定原生事件</title>
+	<script type="text/javascript" src="../vue.js"></script>
+</head>
+<body>
+	<!-- 给组件绑定原生事件 只需加native -->
+	<div id="root">
+		<child @click.native="handleClick"></child>
+	</div>	
+	<!-- 默认在父组件中给子组件绑定事件是无法触发的，需要通过子组件自定义事件向父级触发，父级接收然后才能触发		事件，
+		现在只需给组件绑定原生事件即可触发，不再需要子组件通过自定义事件向父级触发
+	-->
+
+	<script type="text/javascript">
+		Vue.component('child', {
+			template: '<div>hello world</div>',
+			/*methods: {
+				handleClick: function() {
+					// alert('click child');
+					this.$emit('click');
+				}
+			}*/
+		})
+
+		var vm = new Vue({
+			el: '#root',
+			methods: {
+				handleClick: function() {
+					alert('click');
+				}
+			}
+		})
+	</script>
+</body>
+</html>

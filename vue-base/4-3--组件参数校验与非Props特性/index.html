@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>组件参数校验与非Props特性</title>
+	<script type="text/javascript" src="../vue.js"></script>
+</head>
+<body>
+	
+	<div id="root">
+		<child content="hello world"></child>
+	</div>	
+
+	<script type="text/javascript">
+		Vue.component('child', {
+			props: {
+				content: {
+					// type: String,
+					// type: [String, Number],
+					// required: false,
+					validator: function(value) {
+						return value.length > 5
+					}
+				}
+			},
+			template: '<div>{{content}}</div>'
+		})
+
+		var vm = new Vue({
+			el: '#root',
+		})
+
+		/*  非Props特性 
+			子组件没有用props接受父组件传来的属性；
+			父组件传给子组件的属性会显示在DOM标签中
+		*/
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Practice-Vue组件</title>
+	<script type="text/javascript" src="../vue2.6.10.js"></script>
+	<style>
+		body {
+			padding: 0 0 100px 20px;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="example">
+		<p>
+			<button-counter></button-counter>
+		</p>
+		<p>
+			<item v-for="item of list" :key="item.id" :item="item.title" :num="item.id"></item>
+		</p>
+		<p>
+			<component-a></component-a>
+			<component-b></component-b>
+		</p>
+		<base-input label="name" class="username-input" placeholder="Enter your username" data-date-picker="activated">
+		</base-input>
+		<!-- 插槽 -->
+		<div>
+			<!-- 具名插槽 -->
+			<container>
+				<template v-slot:header>
+					<h2>This is header</h2>
+				</template>
+				<template v-slot:content>
+					<p>This is content</p>
+				</template>
+				<template v-slot:footer>
+					<p>This is footer</p>
+				</template>
+			</container>
+			<!-- 作用域插槽 -->
+			<current-user>
+				<template v-slot:default="slotProps">
+					{{slotProps.user.firstName}}
+				</template>
+			</current-user>
+		</div>
+		<!-- TodoList--插槽 -->
+		<todo-list>
+			<template #todo="{ todo }">
+				{{ todo.id }}. {{ todo.text }}
+			</template>
+		</todo-list>
+	</div>
+
+	<script>
+		Vue.component('button-counter', {
+			data: function () {
+				return {
+					counter: 0
+				}
+			},
+			template: '<button @click="handleBtnClick">You clicked me {{counter}} times</button>',
+			methods: {
+				handleBtnClick: function () {
+					this.counter++
+				}
+			}
+		})
+		Vue.component('item', {
+			props: ['item', 'num'],
+			data: function () {
+				return {
+					number: this.num
+				}
+			},
+			template: '<div>{{item}} -- {{num}}</div>'
+		})
+		Vue.component('component-a', {
+			template: '<div>This is a</div>'
+		})
+		var ComponentB = {
+			template: '<div>This is b</div>'
+		}
+
+		Vue.component('base-input', {
+			inheritAttrs: false,
+			props: ['label', 'value'],
+			template: `<label>
+							{{ label }}
+							<input
+								v-bind="$attrs"
+								v-bind:value="value"
+								v-on:input="$emit('input', $event.target.value)"
+							>
+						</label>`
+		})
+
+		/* 具名插槽 */
+		Vue.component('container', {
+			template: `<div>
+							<header><slot name="header"></slot></header>
+							<content><slot name="content"></slot></content>
+							<footer><slot name="footer"></slot></footer>
+						</div>`
+		})
+		/* 作用域插槽 */
+		Vue.component('current-user', {
+			data: function () {
+				return {
+					user: {
+						firstName: 'Miao',
+						lastName: 'RuiFeng'
+					}
+				}
+			},
+			template: `<div>
+							<slot :user="user">{{user.lastName}}</slot>
+						</div>`
+		})
+		/* TodoList插槽 */
+		Vue.component('todo-list', {
+			data: function () {
+				return {
+					todoList: [{
+						id: 1,
+						text: 'Vue.js'
+					}, {
+						id: 2,
+						text: 'AngularJS'
+					}, {
+						id: 3,
+						text: 'React.js'
+					}]
+				}
+			},
+			template: `<ul>
+							<li v-for="todo of todoList" :key="todo.id">
+								<slot name="todo" :todo="todo">
+									{{ todo.text }}
+								</slot>
+							</li>
+						</ul>`
+		})
+
+		var vm = new Vue({
+			el: "#example",
+			data: {
+				list: [{
+					id: '01',
+					title: 'Vue.js'
+				}, {
+					id: '02',
+					title: 'AngularJs'
+				}, {
+					id: '03',
+					title: 'React.js'
+				}]
+			},
+			components: {
+				'component-b': ComponentB
+			}
+		})
+	</script>
+
+</body>
+
+</html>

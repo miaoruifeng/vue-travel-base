@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue.js</title>
+	<script type="text/javascript" src="./vue.js"></script>
+</head>
+<body>
+	<div id="root">
+		<input v-model="inputValue" @keyup.enter="handleAddClick()" />
+		<button @click="handleAddClick">Add</button>
+		<ul>
+			<todo-item 
+				v-for="(item, index) of list"
+				:index="index"
+				:key="item.id"
+				:text="item.text"
+				@remove="handleRemove"
+			>
+			</todo-item>
+		</ul>
+	</div>
+	<script type="text/javascript">
+		Vue.component('todo-item', {
+			props: ['text', 'index'],
+			template: `
+				<li>
+					<span>{{text}}</span>
+					<button @click="handleRemoveClick">Remove</button>
+				</li>
+			`,
+			methods: {
+				handleRemoveClick: function() {
+					this.$emit('remove', this.index);
+				}
+			}
+		})
+
+		var vm = new Vue({
+			el: '#root',
+			data: {
+				inputValue: '',
+				list: [{
+					id: 1,
+					text: 'Vue.js'
+				}, {
+					id: 2,
+					text: 'React'
+				}, {
+					id: 3,
+					text: 'AngularJs'
+				}],
+				itemId: 4
+			},
+			methods: {
+				handleAddClick: function() {
+					if(this.inputValue != '') {
+						this.list.push({
+							id: this.itemId++,
+							text: this.inputValue
+						});
+					}
+					this.inputValue = '';
+				},
+				handleRemove: function(index) {
+					this.list.splice(index, 1);
+				}
+			}
+		})
+	</script>
+</body>
+</html>

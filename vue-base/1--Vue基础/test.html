@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>test</title>
+	<script type="text/javascript" src="./vue.js"></script>
+</head>
+
+<body>
+
+	<div id="app">
+		<h1 v-show="show">{{message}}</h1>
+		<ul>
+			<li v-for="item of list">{{item}}</li>
+		</ul>
+		<button @click="handleClick">点击按钮</button>
+	</div>
+
+	<script>
+		var app = new Vue({
+			el: "#app",
+			data: {
+				message: "hello world",
+				list: [1, 2, 3],
+				show: true
+			},
+			methods: {
+				handleClick: function () {
+					this.show = !this.show
+				}
+			}
+		})
+
+
+		// var strIndex = null;
+		// $(".novelist-nav ul li").click(function () {
+		// 	window.localStorage.setItem('index', $(this).index());
+		// })
+		// strIndex = window.localStorage.getItem('index');
+		// console.log(strIndex);
+		// if (strIndex == null) {
+		// 	$(".novelist-nav ul li").eq(0).addClass('novelist-navdefault');
+		// } else {
+		// 	$(".novelist-nav ul li").eq(strIndex).addClass('novelist-navdefault');
+		// 	$(".novelist-nav ul li").eq(strIndex).siblings().removeClass('novelist-navdefault');
+		// 	window.localStorage.removeItem('index');
+		// }
+	</script>
+
+</body>
+
+</html>

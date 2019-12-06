@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue的模板语法</title>
+	<script type="text/javascript" src="../vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<!-- Vue的3种模板语法
+			1. {{}}
+			2. v-text
+			3. v-html
+			实质是一个js表达式，可以进行计算
+			eg: {{ message + ' hello world'}}
+		 -->
+		<div :id="idValue">{{message}}</div>
+		<div v-text="message"></div>
+		<div v-html="message"></div>
+		<button :disabled="isButtonDisabled">Button</button>
+		<a :href="url">这是一个链接</a>
+	</div>
+	<script type="text/javascript">
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				message: "<h1>Hello World</h1>",
+				isButtonDisabled: true,
+				idValue: 0,
+				url: "https://www.baidu.com"
+			}
+		})
+	</script>
+</body>
+</html>

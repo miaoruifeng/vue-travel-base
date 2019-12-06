@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue入门</title>
+	<script type="text/javascript" src="./vue.js"></script>
+</head>
+<body>
+	<!-- 挂载点, 模板, 实例之间的关系 -->
+	<!-- 模板可以写在挂载点下面 也可以写在实例里 template 属性里 -->
+	<div id="root">
+		<!-- 插值表达式 -->
+		<h1>{{msg}}</h1>
+	</div>
+
+	<script>
+		var vm = new Vue({
+			el: '#root',
+			data: {
+				msg: 'hello world'
+			}
+		})
+		setTimeout( function () {
+			vm.$data.msg = 'bye world'
+		}, 2000)
+	</script>
+
+</body>
+</html>

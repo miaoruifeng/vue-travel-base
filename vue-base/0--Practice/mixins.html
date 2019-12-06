@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Practice-Vue混入</title>
+    <script type="text/javascript" src="../vue2.6.10.js"></script>
+    <style>
+        body {
+            padding: 0 0 100px 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="example">
+        <input type="text" v-focus>
+        <div v-lang="color">hello vue</div>
+    </div>
+
+    <script>
+        var myMixin = {
+            created: function () {
+                this.hello()
+            },
+            methods: {
+                hello: function () {
+                    console.log('hello from mixin')
+                }
+            }
+        }
+        var Component = Vue.extend({
+            mixins: [myMixin]
+        })
+        new Component()
+        var mixin = {
+            data: function () {
+                return {
+                    message: 'hello world',
+                    foo: 'abc'
+                }
+            }
+        }
+        var vm = new Vue({
+            mixins: [mixin],
+            data: function () {
+                return {
+                    message: 'hello vue',
+                    bar: 'def'
+                }
+            },
+            created: function () {
+                console.log(this.$data)
+            }
+        })
+
+        /* 全局注册自定义指令 */
+        // Vue.directive('focus', {
+        //     inserted: function (el) {
+        //         el.focus()
+        //     }
+        // })
+        Vue.directive('lang', function (el, binding) {
+            console.log(el)
+            console.log(binding)
+            el.style='color:' + binding.value
+        })
+
+        var app = new Vue({
+            el: '#example',
+            data: {
+                color: 'red'
+            },
+            /* 局部注册自定义指令 */
+            directives: {
+                focus: {
+                    inserted: function (el) {
+                        el.focus()
+                    }
+                }
+            }
+        })
+    </script>
+
+</body>
+
+</html>

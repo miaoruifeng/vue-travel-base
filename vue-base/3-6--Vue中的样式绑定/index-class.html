@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue中的样式绑定--Class</title>
+	<script type="text/javascript" src="../vue.js"></script>
+	<style type="text/css">
+		.activated {
+			color: red;
+		}
+		.activatedOne {
+			font-size: 18px;
+		}
+		.activated1 {
+			color: blue;
+		}
+		.font-size {
+			font-size: 20px;
+		}
+	</style>
+</head>
+<body>
+	<!-- class与对象绑定 -->
+	<div id="app">
+		<div :class="{activated: isActivated, activatedOne: isActivatedOne}"
+			 @click="handleDivClick"
+		>
+			Hello world
+		</div>
+	</div>
+	<!-- class与数组绑定 -->
+	<div id="app1">
+		<div :class="[activated, fontSize]"
+			 @click="handleDivClick"
+		>
+			Hello world
+		</div>
+	</div>
+	<script type="text/javascript">
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				isActivated: false,
+				isActivatedOne: true
+			},
+			methods: {
+				handleDivClick: function() {
+					this.isActivated = !this.isActivated;
+				}
+			}
+		})
+
+		var vm = new Vue({
+			el: '#app1',
+			data: {
+				activated: "",
+				fontSize: 'font-size'
+			},
+			methods: {
+				handleDivClick: function() {
+					this.activated = this.activated === "activated1" ? "" : "activated1";
+				}
+			}
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Practice-Vue基础</title>
+	<script type="text/javascript" src="../vue2.6.10.js"></script>
+	<style>
+		body {
+			padding: 0 0 100px 20px
+		}
+		.colorClass {
+			color: green;
+		}
+		.fontSizeClass {
+			font-size: 20px;
+		}
+		.active-class {
+			color: black;
+		}
+		.error-class {
+			color: red;
+		}
+		.div-class {
+			width: 100px;
+			line-height: 100px;
+			border: 1px solid red;
+			text-align: center;
+		}
+		.div-class > button {
+			cursor: pointer;
+		}
+		#content {
+			width: 100px;
+			line-height: 40px;
+		}
+		#obj1 {
+			background-color: beige;
+		}
+		#obj2 {
+			background-color: bisque;
+		}
+		#obj3 {
+			background-color: aquamarine;
+		}
+		#obj4 {
+			background-color: aqua;
+			cursor: pointer;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="example">
+
+		<!-- 插值法绑定 -->
+		<p v-once>{{message}}</p>
+		<!-- 双向数据绑定 -->
+		<p><input type="text" v-model.lazy="message"></p>
+		<!-- 事件绑定 属性值绑定 -->
+		<button :disabled="isButtonDisabled" @click="handleClick">点击翻转文本</button>
+		<!-- 列表渲染 - v-for -->
+		<ul>
+			<li v-for="item of list" :key="item.id">
+				{{item.name}} -- {{item.id}}
+			</li>
+		</ul>
+		<!-- 组件 -->
+		<ul>
+			<todo-item
+				v-for="item of list"
+				:item='item'
+				:key='item.id'
+			>
+			</todo-item>
+		</ul>
+		<!-- 模板语法 -->
+		<p>{{text}}</p>
+		<p v-html="text"></p>
+		<p v-text="text"></p>
+		<p>{{message.split('').reverse().join('')}}</p>
+		<p>{{counter +1}}</p>
+		<!-- 动态参数 -->
+		<!-- 计算属性 -->
+		<p>original message is：{{message}}</p>
+		<p>comuted reversed message is：{{reversedMessage}}</p>
+		<!-- Class与Style绑定 -->
+		<p class="font-size" :class="classObj">Class绑定--对象语法</p>
+		<p :class="[isActive ? activeClass : errorClass]">Class绑定--数组语法</p>
+		<p :style="styleObj">Style绑定-对象语法</p>
+		<p :style="[colorStyle]">Style绑定-数组语法</p>
+		<!-- 条件渲染 - v-if & v-show -->
+		<h3 v-if="isShow">show</h3>
+		<h3 v-else>hide</h3>
+		<template v-if="isShow">
+			<h4>Title</h4>
+			<p>Paragraph 1</p>
+			<p>Paragraph 2</p>
+		</template>
+		<div>
+			<!-- 用Key管理可复用的元素 -->
+			<template v-if="inputType">
+				<label>username：</label>
+				<input placeholder="请输入用户名" key="username-input" />
+			</template>
+			<template v-else>
+				<label>email：</label>
+				<input placeholder="请输入邮箱" key="email-input" />
+			</template>
+			<button @click="handleBtnClick">Toggle</button>
+		</div>
+		<!-- 列表渲染 - v-for --对象迭代渲染 -->
+		<ul>
+			<strong>index 作为key值</strong>
+			<li v-for="(value, key, index) of listObj">
+				{{index}}. {{key}} : {{value}}
+			</li>
+		</ul>
+		<ul>
+			<strong>id 作为key值 --- v-bind绑定key属性值</strong>
+			<li v-for="item of list" :key="item.id">
+				{{item.id}}. {{item.name}}
+			</li>
+		</ul>
+		<!-- 数组更新检测 -->
+		<div v-for="item of items">{{item}}</div>
+		<!-- 事件修饰符 -->
+		<!-- .stop -->
+		<div :class="divClass" @click="handleClickParent">
+			<button @click.stop="handleClickChild">点击按钮</button>
+		</div>
+		<!-- .prevent -->
+		<div>
+			<input type="checkbox" @click.prevent />复选框
+		</div>
+		<!-- .capture -->
+		<div id="content">
+			<div id="obj1" @click.capture="handleDivClick">
+				obj1
+				<div id="obj2" @click.capture="handleDivClick">
+					obj2
+					<div id="obj3" @click="handleDivClick">
+							obj3
+						<div id="obj4" @click="handleDivClick">
+							obj4
+							<!--点击obj4的时候，弹出的顺序为：obj1、obj2、obj4、obj3；
+						由于1，2有修饰符，故而先触发事件，然后就是4本身触发，最后冒泡事件。-->
+					</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- .self -->
+		<div :class="divClass" @click.self="handleClickParent">
+			<button @click="handleClickChild">点击按钮</button>
+			<!-- 点击button不会触发handleClickParent,原因是handleClickParent的事件绑定中有修饰符self,只有自身点击才会触发handleClickParent. -->
+		</div>
+		<!-- .once -->
+		<div :class="divClass">
+			<button @click.once="handleBtnClickOnce">clickOnce</button>
+		</div>
+		<!-- 按键修饰符 -->
+		<p><input placeholder="Enter" @keyup.enter="handleEnter" /></p>
+		<!-- <p><input placeholder="Enter" @keyup.13="handleEnter" /></p> -->
+		<p><input placeholder="PageDown" @keyup.page-down="handlePageDown" /></p>
+		<p><input placeholder="F2" @keyup.113="handleF2" /></p>
+		<p @click.ctrl="handleClickCtrl">ClickCtrl</p>
+		<p><input placeholder="Ctrl+C" @keyup.ctrl.67="handleCtrl" /></p>
+		<div>
+			<button @click.ctrl="handleClickCtrl">ClickCtrl</button>
+			<button @click.ctrl.exact="handleCtrlExact">Ctrl</button>
+		</div>
+		<!-- 表单输入绑定 -->
+		<div>
+			<input placeholder="edit input" v-model="msg" />
+			<p>Message is：{{msg}}</p>
+			<textarea placeholder="please edit me" v-model="msg"></textarea>
+			<p>
+				<input type="checkbox" v-model="checked" />
+				<label>{{checked}}</label>
+			</p>
+			<p>
+				<input type="checkbox" value="Vue.js" v-model="checkedNames" />
+				<label>Vue.js</label>
+				<input type="checkbox" value="AngularJS" v-model="checkedNames" />
+				<label>AngularJS</label>
+				<input type="checkbox" value="React" v-model="checkedNames" />
+				<label>React</label>
+				<p>Checked names: {{checkedNames}}</p>
+			</p>
+			<p>
+				<select v-model="selected1">
+					<option value="" disabled>请选择</option>
+					<option value="A">A</option>
+					<option value="B">B</option>
+					<option value="C">C</option>
+				</select>
+				<span>Selected: {{selected1}}</span>
+			</p>
+			<p>
+				<select v-model="selected2" multiple style="width: 50px;">
+					<option value="A">A</option>
+					<option value="B">B</option>
+					<option value="C">C</option>
+				</select>
+				<span>Selected: {{selected2}}</span>
+			</p>
+			<p>
+				<select v-model="selected3">
+					<option v-for="option of options" :value="option.value">{{option.text}}</option>
+				</select>
+				<span>Selected: {{selected3}}</span>
+			</p>
+		</div>
+	</div>
+
+	<script>
+
+		Vue.component('todoItem', {
+			props: ['item'],
+			template: '<li>{{item.name}} -- {{item.id}}</li>'
+		})
+
+		/* 自定义按键修饰符别名 */
+		Vue.config.keyCodes.f2 = 113
+
+		var vm = new Vue({
+			el: "#example",
+			data: {
+				message: 'hello world',
+				text: '<span>hello vue</span>',
+				isButtonDisabled: true,
+				counter: 0,
+				classObj: {
+					colorClass: true,
+					fontSizeClass: true
+				},
+				isActive: false,
+				activeClass: 'active-class',
+				errorClass: 'error-class',
+				styleObj: {
+					color: 'blue',
+					fontSize: '18px'
+				},
+				colorStyle: {
+					color: 'orange',
+					fontSize: '16px'
+				},
+				isShow: true,
+				inputType: true,
+				divClass: 'div-class',
+				divId: '',
+				msg: '',
+				checked: false,
+				checkedNames: [],
+				selected1: '',
+				selected2: [],
+				selected3: 'A',
+				options: [{
+					text: 'One',
+					value: 'A'
+				}, {
+					text: 'Two',
+					value: 'B'
+				}, {
+					text: 'Three',
+					value: 'C'
+				}],
+				list: [{
+					id: 001,
+					name: 'Vue.js'
+				}, {
+					id: 002,
+					name: 'AngularJS'
+				}, {
+					id: 003,
+					name: 'React.js'
+				}],
+				listObj: {
+					firstName: 'miao',
+					lastName: 'ruifeng',
+					age: '18'
+				},
+				items: ['a', 'b', 'c']
+			},
+			computed: {
+				reversedMessage: function () {
+					return this.message.split('').reverse().join('')
+				}
+			},
+			methods: {
+				handleClick: function () {
+					return this.message = this.message.split('').reverse().join('')
+				},
+				handleBtnClick: function () {
+					this.inputType = !this.inputType
+				},
+				handleClickParent: function () {
+					alert('click parent')
+				},
+				handleClickChild: function () {
+					alert('click child')
+				},
+				handleDivClick: function () {
+					this.divId= event.currentTarget.id
+					alert(this.divId)
+				},
+				handleBtnClickOnce: function () {
+					alert('click once')
+				},
+				handleEnter: function () {
+					alert('enter')
+				},
+				handlePageDown: function () {
+					alert('page-down')
+				},
+				handleF2: function () {
+					alert('f2')
+				},
+				handleClickCtrl: function () {
+					alert('click + ctrl')
+				},
+				handleCtrl: function () {
+					alert('ctrl + c')
+				},
+				handleCtrlExact: function () {
+					alert('ctrl + exact')
+				}
+			},
+			created: function () {
+				console.log(this.message)
+			}
+		})
+	</script>
+
+</body>
+
+</html>

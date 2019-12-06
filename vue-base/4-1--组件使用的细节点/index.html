@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>组件使用的细节点</title>
+	<script type="text/javascript" src="../vue.js"></script>
+</head>
+<body>
+	
+	<div id="app">
+		<!-- 1. is属性 -->
+		<table>
+			<tbody>
+				<tr is="row"></tr>
+				<tr is="row"></tr>
+				<tr is="row"></tr>
+			</tbody>
+		</table>
+		<!-- 3. ref -->
+		<!-- 若是Dom元素， vue中通过$refs获取到Dom节点
+			 若是组件，则通过$refs获取到的是组件的引用 ---见example.html
+		 -->
+		<div ref="name" @click="handleClick">hello world</div>
+	</div>	
+
+	<script type="text/javascript">
+		Vue.component('row', {
+			/* 2. 子组件中定义data 必须是函数的形式 return返回一个对象 */
+			data: function() {
+				return {
+					content: "This is a row"
+				}
+			},
+			template: "<tr><td>{{content}}</td></tr>"
+		})
+
+		var vm = new Vue({
+			el: '#app',
+			methods: {
+				handleClick: function() {
+					alert(this.$refs.name.innerHTML);
+				}
+			}
+		})
+	</script>
+</body>
+</html>

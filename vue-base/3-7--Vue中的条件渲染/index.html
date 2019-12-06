@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue中的条件渲染</title>
+	<script type="text/javascript" src="../vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<div v-if="show">{{message}}</div>
+		<div v-show="show">{{message}}</div>
+		<div v-if="text === 'a'"> This is A</div>
+		<div v-else-if="text === 'b'"> This is B</div>
+		<div v-else="text === 'c'"> This is others</div>
+		<!-- 
+			Vue 在重新渲染页面的时候会尝试复用页面已经存在的DOM
+			但是，复用之后内容没有清空，所以加key值可以避免
+			因为加key值之后就是页面上唯一的元素，就不会尝试复用DOM
+		 -->
+		<div v-if="show">
+			用户名： <input key="username" />
+		</div>
+		<div v-else>
+			邮箱名： <input key="emailname" />
+		</div>
+	</div>
+	<script type="text/javascript">
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				message: "Hello World",
+				show: false,
+				text: 'a'
+			}
+		})
+	</script>
+</body>
+</html>
